@@ -5,9 +5,8 @@ import mlflow.sklearn
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
-
 def main():
-    # Experiment boleh diset
+    # 1. Set experiment sebelum memulai run
     mlflow.set_experiment("CI_RFM_Clustering")
 
     # Load data
@@ -23,18 +22,18 @@ def main():
     )
     kmeans.fit(X_scaled)
 
-    # Logging TANPA start_run
-    mlflow.log_param("n_clusters", 4)
-    mlflow.log_param("random_state", 42)
-    mlflow.log_metric("inertia", kmeans.inertia_)
+    # 2. Gunakan start_run() agar MLflow sinkron antara CLI dan script
+    with mlflow.start_run():
+        mlflow.log_param("n_clusters", 4)
+        mlflow.log_param("random_state", 42)
+        mlflow.log_metric("inertia", kmeans.inertia_)
 
-    mlflow.sklearn.log_model(
-        kmeans,
-        artifact_path="kmeans_model"
-    )
+        mlflow.sklearn.log_model(
+            kmeans,
+            artifact_path="kmeans_model"
+        )
 
-    print("CI training selesai & artefak tersimpan.")
-
+        print("CI training selesai & artefak tersimpan.")
 
 if __name__ == "__main__":
     main()
