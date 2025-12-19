@@ -9,13 +9,13 @@ from sklearn.preprocessing import StandardScaler
 def main():
     mlflow.set_experiment("CI_RFM_Clustering")
 
-    # ================= START NESTED RUN =================
+    df = pd.read_csv("dataset_preprocessing.csv")
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(df)
+
+    # 🔑 WAJIB nested=True karena dijalankan via MLflow Project
     with mlflow.start_run(nested=True):
-
-        df = pd.read_csv("dataset_preprocessing.csv")
-
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(df)
 
         kmeans = KMeans(
             n_clusters=4,
@@ -23,7 +23,7 @@ def main():
         )
         kmeans.fit(X_scaled)
 
-        # Logging
+        # Manual logging (SKILLED)
         mlflow.log_param("n_clusters", 4)
         mlflow.log_param("random_state", 42)
         mlflow.log_metric("inertia", kmeans.inertia_)
