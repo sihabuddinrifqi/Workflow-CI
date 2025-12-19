@@ -19,8 +19,6 @@ def main():
     kmeans = KMeans(n_clusters=4, random_state=42)
     kmeans.fit(X_scaled)
 
-    # Ambil ACTIVE RUN jika ada (dari mlflow run), jika tidak ada buat baru
-    active_run = mlflow.active_run()
     
     with (mlflow.start_run(run_id=active_run.info.run_id) if active_run else mlflow.start_run()):
         mlflow.log_param("n_clusters", 4)
