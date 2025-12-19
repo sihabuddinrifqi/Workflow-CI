@@ -6,8 +6,6 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 def main():
-    # 1. Set experiment sebelum memulai run
-    mlflow.set_experiment("CI_RFM_Clustering")
 
     # Load data
     df = pd.read_csv("dataset_preprocessing.csv")
