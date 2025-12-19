@@ -8,37 +8,30 @@ from sklearn.metrics import silhouette_score
 
 
 def main():
-    # Load dataset hasil preprocessing
+    # Load dataset
     df = pd.read_csv("dataset_preprocessing.csv")
 
     # Scaling
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(df)
 
-    # Set experiment MLflow
-    mlflow.set_experiment("RFM_Clustering_Basic")
+    # Set experiment
+    mlflow.set_experiment("CI_RFM_Clustering")
 
-    # Autolog (parameter & model)
-    mlflow.sklearn.autolog(log_models=True)
+    # Train model
+    model = KMeans(n_clusters=4, random_state=42)
+    model.fit(X_scaled)
 
-    with mlflow.start_run():
-        model = KMeans(
-            n_clusters=4,
-            random_state=42
-        )
+    # Evaluation
+    labels = model.predict(X_scaled)
+    sil_score = silhouette_score(X_scaled, labels)
 
-        # Train model
-        model.fit(X_scaled)
+    # Manual logging (WAJIB untuk CI)
+    mlflow.log_param("n_clusters", 4)
+    mlflow.log_metric("silhouette_score", sil_score)
+    mlflow.sklearn.log_model(model, "model")
 
-        # ================= METRIC WAJIB =================
-        labels = model.predict(X_scaled)
-        sil_score = silhouette_score(X_scaled, labels)
-
-        # Log metric manual (WAJIB untuk clustering)
-        mlflow.log_metric("silhouette_score", sil_score)
-
-        print("Model clustering berhasil dilatih.")
-        print(f"Silhouette Score: {sil_score:.4f}")
+    print("Training selesai via MLflow Project CI")
 
 
 if __name__ == "__main__":
