@@ -1,7 +1,6 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
@@ -20,8 +19,8 @@ def main():
     )
     kmeans.fit(X_scaled)
 
-    # 2. Gunakan start_run() agar MLflow sinkron antara CLI dan script
-    with mlflow.start_run():
+    # Gunakan nested=True jika dijalankan via MLProject
+    with mlflow.start_run(nested=True):
         mlflow.log_param("n_clusters", 4)
         mlflow.log_param("random_state", 42)
         mlflow.log_metric("inertia", kmeans.inertia_)
@@ -30,7 +29,6 @@ def main():
             kmeans,
             artifact_path="kmeans_model"
         )
-
         print("CI training selesai & artefak tersimpan.")
 
 if __name__ == "__main__":
