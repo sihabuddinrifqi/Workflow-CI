@@ -14,13 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ✅ INI WAJIB AGAR conda.yaml BISA DIPAKAI
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
+          python-version: 3.10
           auto-update-conda: true
-          python-version: "3.10"
-          activate-environment: base
+          use-mamba: true
 
       - name: Install MLflow
         run: |
