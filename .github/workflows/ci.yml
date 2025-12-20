@@ -40,3 +40,22 @@ jobs:
         with:
           name: mlflow-artifacts
           path: mlruns/
+
+      - name: Upload to Google Drive Folder
+        shell: bash -l {0}
+        env:
+          GDRIVE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          # Install rclone
+          sudo apt-get install rclone -y
+          
+          # Setup konfigurasi rclone dari secret GitHub
+          mkdir -p ~/.config/rclone
+          echo "$GDRIVE_CONFIG" > ~/.config/rclone/rclone.conf
+          
+          # Zip folder mlruns (artefak MLflow) agar tidak berantakan
+          zip -r model_skilled_artefak.zip mlruns/
+          
+          # Upload ke folder ID spesifik
+          # FORMAT: rclone copy [nama_file] [nama_remote]:[ID_FOLDER]
+          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup?usp=drive_link
