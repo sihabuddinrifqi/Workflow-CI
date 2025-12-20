@@ -20,8 +20,7 @@ jobs:
 
       - name: Run MLflow Project
         env:
-          # Sangat penting: gunakan SQLite agar database tidak hilang saat proses pindah ke script
           MLFLOW_TRACKING_URI: sqlite:///mlflow.db
         run: |
-          # Pastikan path ke MLProject benar (jika di folder root)
-          mlflow run MLProject --env-manager=local --experiment-name "CI_RFM_Clustering"
+          mlflow run MLProject --experiment-name "CI_RFM_Clustering"
+
