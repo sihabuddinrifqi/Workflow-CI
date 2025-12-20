@@ -46,16 +46,16 @@ jobs:
         env:
           GDRIVE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
         run: |
-          # Install rclone
-          sudo apt-get install rclone -y
+          sudo apt-get install rclone zip -y
           
-          # Setup konfigurasi rclone dari secret GitHub
+          # Setup konfigurasi rclone dengan cara yang lebih aman
           mkdir -p ~/.config/rclone
-          echo "$GDRIVE_CONFIG" > ~/.config/rclone/rclone.conf
+          cat <<EOF > ~/.config/rclone/rclone.conf
+          $GDRIVE_CONFIG
+          EOF
           
-          # Zip folder mlruns (artefak MLflow) agar tidak berantakan
+          # Zip folder
           zip -r model_skilled_artefak.zip mlruns/
           
-          # Upload ke folder ID spesifik
-          # FORMAT: rclone copy [nama_file] [nama_remote]:[ID_FOLDER]
-          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup
+          # Upload menggunakan ID Folder yang sudah benar
+          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup --drive-use-trash
