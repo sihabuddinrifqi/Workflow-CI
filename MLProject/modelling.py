@@ -13,17 +13,15 @@ def main():
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(df)
 
-    kmeans = KMeans(n_clusters=4, random_state=42)
-    kmeans.fit(X_scaled)
+    model = KMeans(n_clusters=4, random_state=42)
+    model.fit(X_scaled)
 
     mlflow.log_param("n_clusters", 4)
-    mlflow.log_param("random_state", 42)
-    mlflow.log_metric("inertia", kmeans.inertia_)
+    mlflow.log_metric("inertia", model.inertia_)
 
-    mlflow.sklearn.log_model(kmeans, artifact_path="kmeans_model")
+    mlflow.sklearn.log_model(model, artifact_path="kmeans_model")
 
-
-        print("CI training selesai & artefak tersimpan.")
+    print("Training selesai, model tersimpan sebagai artefak MLflow")
 
 
 if __name__ == "__main__":
