@@ -58,4 +58,4 @@ jobs:
           
           # Upload ke folder ID spesifik
           # FORMAT: rclone copy [nama_file] [nama_remote]:[ID_FOLDER]
-          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup?usp=drive_link
+          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup
