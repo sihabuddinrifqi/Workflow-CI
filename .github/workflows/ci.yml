@@ -22,10 +22,12 @@ jobs:
           use-mamba: true
 
       - name: Install MLflow
+        shell: bash -l {0}
         run: |
           pip install mlflow==3.7.0
 
       - name: Run MLflow Project
+        shell: bash -l {0}
         env:
           MLFLOW_TRACKING_URI: sqlite:///mlflow.db
         run: |
