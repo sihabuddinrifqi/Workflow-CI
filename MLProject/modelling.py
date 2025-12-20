@@ -13,8 +13,6 @@ def main():
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(df)
 
-    mlflow.set_experiment("RFM_Clustering_Skilled")
-
     for n_clusters in [2, 3, 4, 5]:
         model = KMeans(
             n_clusters=n_clusters,
