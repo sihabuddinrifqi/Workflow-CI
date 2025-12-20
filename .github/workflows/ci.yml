@@ -58,4 +58,4 @@ jobs:
           zip -r model_skilled_artefak.zip mlruns/
           
           # Upload menggunakan ID Folder yang sudah benar
-          rclone copy model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup --drive-use-trash
+          rclone copy -v model_skilled_artefak.zip gdrive:1DoDlBxjw09kEz9TowTYEPzMIWCIPEiup --drive-use-trash
