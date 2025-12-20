@@ -1,38 +1,36 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import silhouette_score
 
 
 def main():
-    df = pd.read_csv("dataset_preprocessing.csv")
+    mlflow.set_experiment("CI_RFM_Clustering")
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(df)
+    with mlflow.start_run():
 
-    for n_clusters in [2, 3, 4, 5]:
-        model = KMeans(
-            n_clusters=n_clusters,
-            init="k-means++",
-            max_iter=300,
+        df = pd.read_csv("dataset_preprocessing.csv")
+
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(df)
+
+        kmeans = KMeans(
+            n_clusters=4,
             random_state=42
         )
+        kmeans.fit(X_scaled)
 
-        model.fit(X_scaled)
-        labels = model.predict(X_scaled)
+        mlflow.log_param("n_clusters", 4)
+        mlflow.log_param("random_state", 42)
+        mlflow.log_metric("inertia", kmeans.inertia_)
 
-        sil_score = silhouette_score(X_scaled, labels)
+        mlflow.sklearn.log_model(
+            kmeans,
+            artifact_path="kmeans_model"
+        )
 
-        mlflow.log_param("n_clusters", n_clusters)
-        mlflow.log_metric("silhouette_score", sil_score)
-        mlflow.sklearn.log_model(model, "model")
-
-        print(f"n_clusters={n_clusters}, silhouette={sil_score:.4f}")
-
-    print("Training selesai")
+        print("CI training selesai & artefak tersimpan.")
 
 
 if __name__ == "__main__":
